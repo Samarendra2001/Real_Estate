@@ -1,6 +1,7 @@
 import User from "../model/user.model.js";
 import bcryptjs from 'bcryptjs';
-export const signup = async(req,res)=>{
+import { errorHandler } from "../utils/error.js";
+export const signup = async(req,res,next)=>{
 
     
     const {username,email,password} = req.body; //this is for storing the data in database
@@ -10,7 +11,9 @@ export const signup = async(req,res)=>{
         await newUser.save();//this will save and it takes some time that's why we use async
         res.status(201).json('user created successfully');//this will give status message
     } catch (error) {
-        res.status(500).json(error.message)//this is bcz when the username exist it'llnot create another one and the error will be  shown it to user 
+        //res.status(500).json(error.message)//this is bcz when the username exist it'llnot create another one and the error will be  shown it to user 
+        next(error);
+        //next(errorHandler(550,'error from the function'))this is the custom error handle function we hv cretaed in utils.js
     }
     
 }
